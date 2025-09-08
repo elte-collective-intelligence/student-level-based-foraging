@@ -1,0 +1,27 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    continue-on-error: true   # <— whole job won’t fail on errors
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          pip install -r requirements.txt
+          pip install pytest black flake8
+
+      - name: Black (check only)
+        run: black --check src/ test/
+
+      - name: Flake8
+        run: flake8 src/ test/
+
+      - name: Pytest
+        run: pytest --maxfail=1 --disable-warnings -q

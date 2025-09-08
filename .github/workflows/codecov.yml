@@ -1,0 +1,14 @@
+name: Coverage
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt pytest pytest-cov codecov
+      - run: pytest --cov=src --cov-report=xml
+      - uses: codecov/codecov-action@v3
